@@ -1,0 +1,31 @@
+{
+  "name": "git-patch-parser",
+  "version": "0.1.0",
+  "description": "Parse Git patch files",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "test/run.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meteor/git-patch-parser.git"
+  },
+  "keywords": [
+    "git",
+    "patch",
+    "parse"
+  ],
+  "author": "mdg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/meteor/git-patch-parser/issues"
+  },
+  "homepage": "https://github.com/meteor/git-patch-parser",
+  "devDependencies": {
+    "meteor-babel": "^0.4.6",
+    "mocha": "^2.2.5"
+  }
+}

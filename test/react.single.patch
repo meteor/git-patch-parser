@@ -1,0 +1,34 @@
+From f48c03507b9438ad4c1e9a48a2d5b82b1bd354ea Mon Sep 17 00:00:00 2001
+From: Sashko Stubailo <sashko@stubailo.com>
+Date: Mon, 13 Jul 2015 12:23:02 -0700
+Subject: [PATCH 17/41] Step 8.4: Replace getMeteorData to filter tasks
+
+---
+ App.jsx | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/App.jsx b/App.jsx
+index 6799fca..105577e 100644
+--- a/App.jsx
++++ b/App.jsx
+@@ -12,9 +12,16 @@ App = React.createClass({
+ 
+   // Loads items from the Tasks collection and puts them on this.data.tasks
+   getMeteorData() {
+-    return {
+-      tasks: Tasks.find({}, {sort: {createdAt: -1}}).fetch()
++    let query = {};
++
++    if (this.state.hideCompleted) {
++      // If hide completed is checked, filter tasks
++      query = {checked: {$ne: true}};
+     }
++
++    return {
++      tasks: Tasks.find(query, {sort: {createdAt: -1}}).fetch()
++    };
+   },
+ 
+   renderTasks() {
+-- 
+2.2.1
