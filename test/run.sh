@@ -5,5 +5,5 @@ cd $(dirname $0)
 mocha \
   --reporter spec \
   --full-trace \
-  --compilers js:meteor-babel/register \
+  --compilers js:babel/register \
   tests.js

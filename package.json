@@ -1,13 +1,15 @@
 {
   "name": "git-patch-parser",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Parse Git patch files",
-  "main": "index.js",
+  "main": "lib/index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "test/run.sh"
+    "test": "test/run.sh",
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -25,7 +27,7 @@
   },
   "homepage": "https://github.com/meteor/git-patch-parser",
   "devDependencies": {
-    "meteor-babel": "^0.4.6",
+    "babel": "^5.8.3",
     "mocha": "^2.2.5"
   }
 }

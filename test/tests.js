@@ -1,6 +1,6 @@
 import assert from "assert";
 import fs from "fs";
-import { parsePatch, parseMultiPatch } from "../index";
+import { parsePatch, parseMultiPatch } from "../src/index";
 
 describe("Reading single patch", () => {
   it("Parses the example patch", () => {
