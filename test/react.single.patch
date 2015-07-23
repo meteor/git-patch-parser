@@ -1,35 +1,43 @@
-From f48c03507b9438ad4c1e9a48a2d5b82b1bd354ea Mon Sep 17 00:00:00 2001
+From ce86ff010f94a8a1cc2c8e6f9331df080565682b Mon Sep 17 00:00:00 2001
 From: Sashko Stubailo <sashko@stubailo.com>
-Date: Mon, 13 Jul 2015 12:23:02 -0700
-Subject: [PATCH 17/41] Step 8.4: Modify App component to get tasks from
+Date: Mon, 13 Jul 2015 12:08:44 -0700
+Subject: [PATCH 09/41] Step 3.2: Modify App component to get tasks from
  collection
 
 ---
- App.jsx | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ App.jsx | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
 diff --git a/App.jsx b/App.jsx
-index 6799fca..105577e 100644
+index 27ac66e..60f1400 100644
 --- a/App.jsx
 +++ b/App.jsx
-@@ -12,9 +12,16 @@ App = React.createClass({
- 
-   // Loads items from the Tasks collection and puts them on this.data.tasks
-   getMeteorData() {
--    return {
--      tasks: Tasks.find({}, {sort: {createdAt: -1}}).fetch()
-+    let query = {};
+@@ -1,15 +1,19 @@
+ // App component - represents the whole app
+ App = React.createClass({
+-  getTasks() {
+-    return [
+-      { _id: 1, text: "This is task 1" },
+-      { _id: 2, text: "This is task 2" },
+-      { _id: 3, text: "This is task 3" }
+-    ];
 +
-+    if (this.state.hideCompleted) {
-+      // If hide completed is checked, filter tasks
-+      query = {checked: {$ne: true}};
-     }
++  // This mixin makes the getMeteorData method work
++  mixins: [ReactMeteorData],
 +
++  // Loads items from the Tasks collection and puts them on this.data.tasks
++  getMeteorData() {
 +    return {
-+      tasks: Tasks.find(query, {sort: {createdAt: -1}}).fetch()
-+    };
++      tasks: Tasks.find({}).fetch()
++    }
    },
  
    renderTasks() {
+-    return this.getTasks().map((task) => {
++    // Get tasks from this.data.tasks
++    return this.data.tasks.map((task) => {
+       return <Task key={task._id} task={task} />;
+     });
+   },
 -- 
 2.2.1

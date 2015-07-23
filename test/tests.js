@@ -12,40 +12,40 @@ describe("Reading single patch", () => {
     const results = parsePatch(contents);
 
     // Ensure the metadata is correct
-    assert.equal(results.sha, "f48c03507b9438ad4c1e9a48a2d5b82b1bd354ea");
-    assert.equal(results.message, "Step 8.4: Modify App component to get tasks from collection");
+    assert.equal(results.sha, "ce86ff010f94a8a1cc2c8e6f9331df080565682b");
+    assert.equal(results.message, "Step 3.2: Modify App component to get tasks from collection");
 
     const lines = results.files["App.jsx"].lines;
 
     // Ensure the line numbers parsed from the patch are correct
     assert.deepEqual(results.files["App.jsx"].lineNumbers, {
       removed: {
-        start: 12,
-        lines: 9
+        start: 1,
+        lines: 15
       },
       added: {
-        start: 12,
-        lines: 16
+        start: 1,
+        lines: 19
       }
     });
 
     // Ensure the line numbers parsed from the patch are correct
-    assert.strictEqual(results.files["App.jsx"].lineNumbers.removed.start, 12);
+    assert.strictEqual(results.files["App.jsx"].lineNumbers.removed.start, 1);
 
     // Ensure the lines themselves are correct
     assert.deepEqual(lines[0], {
       type: "context",
-      content: ""
+      content: "// App component - represents the whole app"
     });
 
-    assert.deepEqual(lines[3], {
+    assert.deepEqual(lines[2], {
       type: "removed",
-      content: "    return {"
+      content: "  getTasks() {"
     });
 
-    assert.deepEqual(lines[5], {
+    assert.deepEqual(lines[9], {
       type: "added",
-      content: "    let query = {};"
+      content: "  // This mixin makes the getMeteorData method work"
     });
   });
 });
