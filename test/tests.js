@@ -29,6 +29,9 @@ describe("Reading single patch", () => {
       }
     });
 
+    // Ensure the line numbers parsed from the patch are correct
+    assert.strictEqual(results.files["App.jsx"].lineNumbers.removed.start, 12);
+
     // Ensure the lines themselves are correct
     assert.deepEqual(lines[0], {
       type: "context",

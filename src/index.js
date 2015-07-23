@@ -72,7 +72,6 @@ export function parseUnifiedDiff(diffContents) {
   // Take off first line which is just line numbers, and last line which
   // is just empty
   const contentPatchLines = diffLines.slice(1, diffLines.length - 1);
-  const lineNumberMatch = /^@@ -(\d+),?(\d+)? \+(\d+),?(\d+)? @@/.exec(lineNumbers);
 
   const parsedLines = contentPatchLines.map((line) => {
     if (! line) {
@@ -93,6 +92,10 @@ export function parseUnifiedDiff(diffContents) {
       type,
       content: content
     };
+  });
+
+  const lineNumberMatch = /^@@ -(\d+),?(\d+)? \+(\d+),?(\d+)? @@/.exec(lineNumbers).map((str) => {
+    return parseInt(str, 10);
   });
 
   return {
