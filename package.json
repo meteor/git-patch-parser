@@ -1,6 +1,6 @@
 {
   "name": "git-patch-parser",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Parse Git patch files",
   "main": "lib/index.js",
   "directories": {
