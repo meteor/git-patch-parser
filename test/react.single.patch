@@ -1,7 +1,8 @@
 From f48c03507b9438ad4c1e9a48a2d5b82b1bd354ea Mon Sep 17 00:00:00 2001
 From: Sashko Stubailo <sashko@stubailo.com>
 Date: Mon, 13 Jul 2015 12:23:02 -0700
-Subject: [PATCH 17/41] Step 8.4: Replace getMeteorData to filter tasks
+Subject: [PATCH 17/41] Step 8.4: Modify App component to get tasks from
+ collection
 
 ---
  App.jsx | 11 +++++++++--

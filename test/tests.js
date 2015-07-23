@@ -13,7 +13,7 @@ describe("Reading single patch", () => {
 
     // Ensure the metadata is correct
     assert.equal(results.sha, "f48c03507b9438ad4c1e9a48a2d5b82b1bd354ea");
-    assert.equal(results.message, "Step 8.4: Replace getMeteorData to filter tasks");
+    assert.equal(results.message, "Step 8.4: Modify App component to get tasks from collection");
 
     const lines = results.files["App.jsx"].lines;
 

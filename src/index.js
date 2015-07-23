@@ -7,7 +7,7 @@
 export function parsePatch(contents) {
   const sha = contents.split(" ")[1];
 
-  const message = /^Subject: \[.+?\] (.+)$/m.exec(contents)[1];
+  const message = /^Subject: \[.+?\] ([\S\s]+)---$/m.exec(contents)[1].trim().replace("\n", "");
 
   const fileParts = contents.split(/^diff --git /m).slice(1);
   const files = {};
