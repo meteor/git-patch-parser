@@ -66,6 +66,21 @@ describe("Reading multi patch", () => {
     // This file has 6 different sections to the patch
     assert.strictEqual(file.length, 5);
   });
+
+  it("Ignores 'no new line at the end of the file' message", () => {
+    const contents = readFile("react-with-eof-message.multi.patch");
+
+    // Make sure we got the file
+    assert.ok(contents);
+
+    const results = parseMultiPatch(contents);
+
+    // Step 2.1 with "No newline at end of file" at the end of the diff
+    const step = results[1];
+    const file = step.files[".meteor/versions"];
+
+    assert.strictEqual(file[3].lines.length, 11);
+  });
 });
 
 function readFile(filename) {
