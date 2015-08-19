@@ -19,7 +19,7 @@ export function parsePatch(contents) {
     // XXX won't work with spaces in filenames
     const fileNameMatch = /^\+\+\+ b\/(.+)$/m.exec(part);
 
-    if (! fileNameMatch) {
+    if (!fileNameMatch) {
       // This was probably a deleted file
       return;
     }
@@ -73,12 +73,10 @@ export function parseUnifiedDiff(diffContents) {
   const contentPatchLines = diffLines.slice(0, diffLines.length - 1);
 
   const parsedLines = contentPatchLines.map((line) => {
-    if (! line) {
+    if (!line || line.indexOf('No newline at end of file') > -1) {
       // The last line ends up being an empty string
       return null;
     }
-
-    line = line.replace('\\ No newline at end of file', '');
 
     if (/^@/.test(line)) {
       type = "lineNumbers";
@@ -123,17 +121,19 @@ export function parseUnifiedDiff(diffContents) {
   let currSection;
 
   parsedLines.forEach((line) => {
-    if (line.type == "lineNumbers") {
-      if (currSection) {
-        sections.push(currSection);
-      }
+    if (line !== null) {
+      if (line.type == "lineNumbers") {
+        if (currSection) {
+          sections.push(currSection);
+        }
 
-      currSection = {
-        lines: [],
-        lineNumbers: line.lineNumbers
-      };
-    } else {
-      currSection.lines.push(line);
+        currSection = {
+          lines: [],
+          lineNumbers: line.lineNumbers
+        };
+      } else {
+        currSection.lines.push(line);
+      }
     }
   });
 
