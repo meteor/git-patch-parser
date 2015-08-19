@@ -78,6 +78,8 @@ export function parseUnifiedDiff(diffContents) {
       return null;
     }
 
+    line = line.replace('\\ No newline at end of file', '');
+
     if (/^@/.test(line)) {
       type = "lineNumbers";
 
