@@ -69,14 +69,35 @@ export function parseUnifiedDiff(diffContents) {
   const diffLines = diffContents.split("\n");
   const lineNumbers = diffLines[0];
 
-  // Take off first line which is just line numbers, and last line which
-  // is just empty
-  const contentPatchLines = diffLines.slice(1, diffLines.length - 1);
+  // Take off the last line which is just empty
+  const contentPatchLines = diffLines.slice(0, diffLines.length - 1);
 
   const parsedLines = contentPatchLines.map((line) => {
     if (! line) {
       // The last line ends up being an empty string
       return null;
+    }
+
+    if (/^@/.test(line)) {
+      type = "lineNumbers";
+
+      const lineNumberMatch = /^@@ -(\d+),?(\d+)? \+(\d+),?(\d+)? @@/.exec(line).map((str) => {
+        return parseInt(str, 10);
+      });
+
+      return {
+        type,
+        lineNumbers: {
+          removed: {
+            start: lineNumberMatch[1],
+            lines: lineNumberMatch[2]
+          },
+          added: {
+            start: lineNumberMatch[3],
+            lines: lineNumberMatch[4]
+          }
+        }
+      }
     }
 
     let type = "context";
@@ -94,21 +115,27 @@ export function parseUnifiedDiff(diffContents) {
     };
   });
 
-  const lineNumberMatch = /^@@ -(\d+),?(\d+)? \+(\d+),?(\d+)? @@/.exec(lineNumbers).map((str) => {
-    return parseInt(str, 10);
+  // Now that we have parsed all of the lines, assemble them into sections that
+  // have their own line number ranges
+  const sections = [];
+  let currSection;
+
+  parsedLines.forEach((line) => {
+    if (line.type == "lineNumbers") {
+      if (currSection) {
+        sections.push(currSection);
+      }
+
+      currSection = {
+        lines: [],
+        lineNumbers: line.lineNumbers
+      };
+    } else {
+      currSection.lines.push(line);
+    }
   });
 
-  return {
-    lineNumbers: {
-      removed: {
-        start: lineNumberMatch[1],
-        lines: lineNumberMatch[2]
-      },
-      added: {
-        start: lineNumberMatch[3],
-        lines: lineNumberMatch[4]
-      }
-    },
-    lines: parsedLines
-  };
+  sections.push(currSection);
+
+  return sections;
 }

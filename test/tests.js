@@ -15,10 +15,10 @@ describe("Reading single patch", () => {
     assert.equal(results.sha, "ce86ff010f94a8a1cc2c8e6f9331df080565682b");
     assert.equal(results.message, "Step 3.2: Modify App component to get tasks from collection");
 
-    const lines = results.files["App.jsx"].lines;
+    const lines = results.files["App.jsx"][0].lines;
 
     // Ensure the line numbers parsed from the patch are correct
-    assert.deepEqual(results.files["App.jsx"].lineNumbers, {
+    assert.deepEqual(results.files["App.jsx"][0].lineNumbers, {
       removed: {
         start: 1,
         lines: 15
@@ -30,7 +30,7 @@ describe("Reading single patch", () => {
     });
 
     // Ensure the line numbers parsed from the patch are correct
-    assert.strictEqual(results.files["App.jsx"].lineNumbers.removed.start, 1);
+    assert.strictEqual(results.files["App.jsx"][0].lineNumbers.removed.start, 1);
 
     // Ensure the lines themselves are correct
     assert.deepEqual(lines[0], {
@@ -58,6 +58,13 @@ describe("Reading multi patch", () => {
     assert.ok(contents);
 
     const results = parseMultiPatch(contents);
+
+    // Step 9.1
+    const step = results[19];
+    const file = step.files[".meteor/versions"];
+
+    // This file has 6 different sections to the patch
+    assert.strictEqual(file.length, 5);
   });
 });
 
