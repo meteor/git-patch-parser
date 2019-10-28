@@ -13,7 +13,10 @@ describe("Reading single patch", () => {
 
     // Ensure the metadata is correct
     assert.equal(results.sha, "ce86ff010f94a8a1cc2c8e6f9331df080565682b");
-    assert.equal(results.message, "Step 3.2: Modify App component to get tasks from collection");
+    assert.equal(
+      results.message,
+      "Step 3.2: Modify App component to get tasks from collection"
+    );
 
     const lines = results.files["App.jsx"][0].lines;
 
@@ -21,31 +24,34 @@ describe("Reading single patch", () => {
     assert.deepEqual(results.files["App.jsx"][0].lineNumbers, {
       removed: {
         start: 1,
-        lines: 15
+        lines: 15,
       },
       added: {
         start: 1,
-        lines: 19
-      }
+        lines: 19,
+      },
     });
 
     // Ensure the line numbers parsed from the patch are correct
-    assert.strictEqual(results.files["App.jsx"][0].lineNumbers.removed.start, 1);
+    assert.strictEqual(
+      results.files["App.jsx"][0].lineNumbers.removed.start,
+      1
+    );
 
     // Ensure the lines themselves are correct
     assert.deepEqual(lines[0], {
       type: "context",
-      content: "// App component - represents the whole app"
+      content: "// App component - represents the whole app",
     });
 
     assert.deepEqual(lines[2], {
       type: "removed",
-      content: "  getTasks() {"
+      content: "  getTasks() {",
     });
 
     assert.deepEqual(lines[9], {
       type: "added",
-      content: "  // This mixin makes the getMeteorData method work"
+      content: "  // This mixin makes the getMeteorData method work",
     });
   });
 });
