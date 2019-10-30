@@ -7,7 +7,10 @@
 export function parsePatch(contents) {
   const sha = contents.split(" ")[1];
 
-  const message = /^Subject: \[.+?\] ([\S\s]+)?^---$/m.exec(contents)[1].trim().replace("\n", "");
+  const message = /^Subject: \[.+?\] ([\S\s]+)?^---$/m
+    .exec(contents)[1]
+    .trim()
+    .replace("\n", "");
 
   const fileParts = contents.split(/^diff --git /m).slice(1);
   const files = {};
@@ -19,12 +22,12 @@ export function parsePatch(contents) {
     // XXX won't work with spaces in filenames
     const fileNameMatch = /^\+\+\+ b\/(.+)$/m.exec(part);
 
-    if (! fileNameMatch) {
+    if (!fileNameMatch) {
       // This was probably a deleted file
       return;
     }
 
-    const fileName = fileNameMatch[1]
+    const fileName = fileNameMatch[1];
 
     const fileData = parseUnifiedDiff(diffContents);
 
@@ -34,7 +37,7 @@ export function parsePatch(contents) {
   return {
     files,
     sha,
-    message
+    message,
   };
 }
 
@@ -73,7 +76,9 @@ export function parseUnifiedDiff(diffContents) {
   const contentPatchLines = diffLines.slice(0, diffLines.length - 1);
 
   const parsedLines = contentPatchLines.map((line) => {
-    if (! line) {
+    // If the line starts with a backslash, it's not part of the patch. In
+    // particular, this is the case with the "no newline at end of file" thing
+    if (!line || /^\\/.test(line)) {
       // The last line ends up being an empty string
       return null;
     }
@@ -81,23 +86,25 @@ export function parseUnifiedDiff(diffContents) {
     if (/^@/.test(line)) {
       type = "lineNumbers";
 
-      const lineNumberMatch = /^@@ -(\d+),?(\d+)? \+(\d+),?(\d+)? @@/.exec(line).map((str) => {
-        return parseInt(str, 10);
-      });
+      const lineNumberMatch = /^@@ -(\d+),?(\d+)? \+(\d+),?(\d+)? @@/
+        .exec(line)
+        .map((str) => {
+          return parseInt(str, 10);
+        });
 
       return {
         type,
         lineNumbers: {
           removed: {
             start: lineNumberMatch[1],
-            lines: lineNumberMatch[2]
+            lines: lineNumberMatch[2],
           },
           added: {
             start: lineNumberMatch[3],
-            lines: lineNumberMatch[4]
-          }
-        }
-      }
+            lines: lineNumberMatch[4],
+          },
+        },
+      };
     }
 
     let type = "context";
@@ -111,7 +118,7 @@ export function parseUnifiedDiff(diffContents) {
 
     return {
       type,
-      content: content
+      content: content,
     };
   });
 
@@ -121,17 +128,19 @@ export function parseUnifiedDiff(diffContents) {
   let currSection;
 
   parsedLines.forEach((line) => {
-    if (line.type == "lineNumbers") {
-      if (currSection) {
-        sections.push(currSection);
-      }
+    if (line !== null) {
+      if (line.type == "lineNumbers") {
+        if (currSection) {
+          sections.push(currSection);
+        }
 
-      currSection = {
-        lines: [],
-        lineNumbers: line.lineNumbers
-      };
-    } else {
-      currSection.lines.push(line);
+        currSection = {
+          lines: [],
+          lineNumbers: line.lineNumbers,
+        };
+      } else {
+        currSection.lines.push(line);
+      }
     }
   });
 
